@@ -1,5 +1,7 @@
 ﻿using Bankify.Context;
 using Microsoft.EntityFrameworkCore;
+using Bankify.Controllers;
+using Bankify.Middleware;
 
 
 namespace Bankify;
@@ -10,6 +12,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddTransient<AuthToken>();
 
         // Add services to the container.
 
@@ -27,6 +31,8 @@ public class Program
         app.UseAuthorization();
 
         app.UseCors();
+
+        app.UseAuthToken();
 
         app.MapControllers();
 
