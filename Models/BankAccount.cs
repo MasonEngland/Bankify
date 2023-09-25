@@ -6,6 +6,10 @@ namespace Bankify.Models
 	{
 		public Guid Id { get; set; }
 
+		public string Name { get; set; }
+
+		public string AccountID { get; set; }
+
 		public string Username { get; set; }
 
 		public string Email { get; set; }
@@ -17,6 +21,8 @@ namespace Bankify.Models
 		public BankAccount()
 		{
 			Id = Guid.NewGuid();
+
+			Balance = 0;
 
 			Date = DateTime.Now;
 		}

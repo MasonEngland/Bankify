@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using JWT.Algorithms;
 using JWT.Builder;
+using Bankify.Models;
 
 namespace Bankify.Middleware;
 
@@ -11,6 +13,14 @@ public class AuthToken : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+
+        string path = context.Request.Path;
+
+        if (path.Contains("/Auth")) 
+        {
+            await next(context);
+            return;
+        }
 
         string? authHeader = context.Request.Headers.Authorization;
 
@@ -24,16 +34,24 @@ public class AuthToken : IMiddleware
         try
         {
             authHeader = authHeader.Split(" ")[1];
-            var decoded = JwtBuilder
+            string? decoded = JwtBuilder
                 .Create()
                 .WithAlgorithm(new HMACSHA256Algorithm())
                 .WithSecret(secret)
                 .Decode(authHeader);
+            if (decoded == null)
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("invalid token");
+                return;
+            }
 
             IDictionary<object, object?> item = new Dictionary<object, object?>
             {
                 { "tokenData", decoded }
             };
+
+
 
             context.Items = item;
             await next(context);
