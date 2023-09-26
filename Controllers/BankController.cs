@@ -72,6 +72,7 @@ public class BankController : Controller
 	{
 		try
 		{
+			//TODO possibly refactor into seperate method
 			string? data = Convert.ToString(HttpContext.Items["tokenData"]);
 			UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
 
@@ -80,9 +81,10 @@ public class BankController : Controller
 				return Unauthorized("token could not be deserialized");
 			}
 
+            //ExecuteUpdate() doesn't require a _db.SaveChanges()
             _db.bankAccounts
-            .Where(item => Convert.ToString(item.Id) == id)
-            .ExecuteUpdate(u => u.SetProperty(p => p.Balance, balance));
+				.Where(item => Convert.ToString(item.Id) == id)
+				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, balance)); 
 
             return Ok();
         } catch (Exception err)

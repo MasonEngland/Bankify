@@ -1,7 +1,7 @@
 ﻿using Bankify.Context;
 using Microsoft.EntityFrameworkCore;
-using Bankify.Controllers;
 using Bankify.Middleware;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
 
 namespace Bankify;
@@ -11,6 +11,10 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var root = Directory.GetCurrentDirectory();
+        var dotenv = Path.Combine(root, ".env");
+        DotEnv.Config(dotenv);
+
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddTransient<AuthToken>();

@@ -16,8 +16,6 @@ namespace Bankify.Controllers;
 public class AuthController : Controller
 {
 
-	//TODO - find a private place to keep the access token secret
-	private static string secret = "ILoveTestingJwTS";
     // pull database using dependancy injection
     private readonly DatabaseContext _db;
 
@@ -72,6 +70,15 @@ public class AuthController : Controller
 	[HttpPost("Login")]
 	public object Login([FromBody] UserAccount account)
 	{
+
+        string? secret = Environment.GetEnvironmentVariable("ACCESS_TOKEN_SECRET");
+		// just here for saftey
+		if (secret == null)
+		{
+			Debug.WriteLine("problem with token secret");
+			return StatusCode(500);
+		}
+
 		try
 		{
 			// find account in the database with matching Email
@@ -100,8 +107,8 @@ public class AuthController : Controller
 				{
 					success = false,
 					msg = "incorrect username or password"
-				});
-			}
+                });
+            }
 
 			// build a jwt and sign it with a token secret
 			string token = JwtBuilder

@@ -8,15 +8,20 @@ namespace Bankify.Middleware;
 
 public class AuthToken : IMiddleware
 {
-    private static string secret = "ILoveTestingJwTS";
-
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        string? secret = Environment.GetEnvironmentVariable("ACCESS_TOKEN_SECRET");
+
+        if (secret == null)
+        {
+            await context.Response.WriteAsync("Environment Variable could not be found");
+            return;
+        }
 
         string path = context.Request.Path;
 
-        if (path.Contains("/Auth")) 
+        if (path.Contains("/Auth/Register") || path.Contains("/Auth/Login")) 
         {
             await next(context);
             return;
