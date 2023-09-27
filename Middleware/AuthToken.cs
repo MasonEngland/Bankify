@@ -8,11 +8,13 @@ namespace Bankify.Middleware;
 
 public class AuthToken : IMiddleware
 {
-
+    // Middleware to deserialize and authenticate a json web token
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        // get the token secret from the environment
         string? secret = Environment.GetEnvironmentVariable("ACCESS_TOKEN_SECRET");
 
+        // check to make sure the secret could be grabbed
         if (secret == null)
         {
             await context.Response.WriteAsync("Environment Variable could not be found");
@@ -21,12 +23,14 @@ public class AuthToken : IMiddleware
 
         string path = context.Request.Path;
 
+        // skip middleware for certain paths
         if (path.Contains("/Auth/Register") || path.Contains("/Auth/Login")) 
         {
             await next(context);
             return;
         }
 
+        // get the token from the authorization header
         string? authHeader = context.Request.Headers.Authorization;
 
         if (authHeader == null)
@@ -38,6 +42,7 @@ public class AuthToken : IMiddleware
 
         try
         {
+            // deserialize the token
             authHeader = authHeader.Split(" ")[1];
             string? decoded = JwtBuilder
                 .Create()
@@ -57,7 +62,7 @@ public class AuthToken : IMiddleware
             };
 
 
-
+            // attach the json data to the request
             context.Items = item;
             await next(context);
         } catch(Exception err)
