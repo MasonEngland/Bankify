@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Pages/login.dart';
+//import 'fetch_data.dart';
 
-void main() {
+void main() async {
   runApp(const MaterialApp(title: "Welcome to flutter", home: LoginPage()));
 }
 

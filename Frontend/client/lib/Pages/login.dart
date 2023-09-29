@@ -5,13 +5,9 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Please Register"),
-        backgroundColor: Colors.red,
-      ),
-      body: const InputFields(),
-      backgroundColor: Colors.grey,
+    return const Scaffold(
+      body: InputFields(),
+      backgroundColor: Color.fromARGB(255, 210, 46, 46),
     );
   }
 }
@@ -32,12 +28,35 @@ class InputFieldsState extends State<InputFields> {
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(4))),
-        width: 300,
+        width: 350,
         height: 500,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            const Text("Login", style: TextStyle(fontSize: 28)),
             TextFormField(
-              decoration: const InputDecoration(hintText: "Username"),
+              decoration: const InputDecoration(
+                hintText: "Username",
+              ),
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                hintText: "Password",
+              ),
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                hintText: "Email",
+              ),
+            ),
+            TextButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blue)),
+              onPressed: () {},
+              child: const Text(
+                "Click Me",
+                style: TextStyle(color: Colors.white),
+              ),
             )
           ],
         ),
