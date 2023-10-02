@@ -40,7 +40,7 @@ public class AuthController : Controller
 				return new
 				{
 					success = false,
-					msg = "Email already registerd"
+					msg = "Attempt Failed"
 				};
 			}
 

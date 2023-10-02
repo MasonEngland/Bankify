@@ -1,23 +1,28 @@
 import "dart:convert";
-
 import "package:http/http.dart" as http;
+import "dart:developer";
 
-String? token;
+class FetchHandler {
+  static Uri url = Uri.parse("http://localhost:1156/Auth/Login");
+  static Map<String, dynamic>? userData;
+  static String? token;
 
-Future getData() async {
-  Uri url = Uri.parse("http://localhost:1156/Auth/Login");
+  static Future<bool> sendLogin(Map<String, dynamic> data) async {
+    const headers = {
+      "Accept": "application/json",
+      "content-type": "application/json"
+    };
 
-  var headers = {
-    "Accept": "application/json",
-    "content-type": "application/json",
-  };
-  String body = jsonEncode({
-    "Username": "Mason",
-    "Password": "notPassword",
-    "Email": "masonengland01@gmail.com"
-  });
+    String body = jsonEncode(data);
 
-  var response = await http.post(url, body: body, headers: headers);
-  token = jsonDecode(response.body)["token"];
-  return token;
+    var response = await http.post(url, body: body, headers: headers);
+
+    log(response.statusCode as String);
+
+    if (response.statusCode != 200) {
+      return false;
+    }
+    userData = jsonDecode(response.body);
+    return true;
+  }
 }
