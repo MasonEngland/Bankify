@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 import 'package:client/fetch_data.dart';
 import 'package:flutter/material.dart';
-import 'package:client/main.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -23,10 +22,13 @@ class InputFields extends StatefulWidget {
 }
 
 class InputFieldsState extends State<InputFields> {
+  // state
   String _username = "";
   String _password = "";
   String _email = "";
-  bool _isLoggedin = false;
+
+  // private
+  bool isRegistered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class InputFieldsState extends State<InputFields> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Text("Login", style: TextStyle(fontSize: 28)),
+            const Text("Register", style: TextStyle(fontSize: 28)),
             TextFormField(
               onChanged: (String value) {
                 setState(() {
@@ -53,6 +55,7 @@ class InputFieldsState extends State<InputFields> {
               ),
             ),
             TextFormField(
+              obscureText: true,
               onChanged: (String value) {
                 setState(() {
                   _password = value;
@@ -72,20 +75,25 @@ class InputFieldsState extends State<InputFields> {
             ),
             TextButton(
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.blue)),
+                backgroundColor: MaterialStateProperty.all(Colors.blue),
+              ),
               onPressed: () async {
-                _isLoggedin = await FetchHandler.sendLogin({
+                isRegistered = await FetchHandler.sendRegister({
                   "Username": _username,
                   "Password": _password,
                   "Email": _email
                 });
                 //print(_isLoggedin);
-                if (_isLoggedin == true) {
+                if (isRegistered != true) {
                   // ignore: use_build_context_synchronously
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MyHomePage()));
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text("Register Failed"),
+                      );
+                    },
+                  );
                 }
               },
               child: const Text(

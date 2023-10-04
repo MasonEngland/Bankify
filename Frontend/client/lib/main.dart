@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Pages/login.dart';
+import 'Pages/register.dart';
 //import 'fetch_data.dart';
 
 void main() async {
