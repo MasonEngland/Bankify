@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Pages/register.dart';
+import 'Pages/login.dart';
+//import 'Pages/register.dart';
 //import 'fetch_data.dart';
 
 void main() async {
@@ -44,7 +45,9 @@ class SomeTextTest extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4), color: Colors.green),
+        borderRadius: BorderRadius.circular(4),
+        color: Colors.green,
+      ),
       margin: const EdgeInsets.only(left: 20, top: 20),
       height: 50,
       width: 150,

@@ -92,7 +92,7 @@ public class AuthController : Controller
 				return NotFound(new
 				{
 					success = false,
-					msg = "Email not Registered"
+					msg = "Login Failed"
 				});
 			}
 
@@ -100,7 +100,7 @@ public class AuthController : Controller
 			bool isMatch = Verify(account.Password, dbAccount[0].Password);
 
 			// Check Username and Password are Correct
-                if (account.Username != dbAccount[0].Username || !isMatch)
+                if (!isMatch)
 			{
 				StatusCode(401);
 				return Unauthorized(new
@@ -125,7 +125,7 @@ public class AuthController : Controller
 			return new
 			{
 				Success = true,
-				Username = account.Username,
+				Username = dbAccount[0].Username,
 				Email = account.Email,
 				Id = dbAccount[0].Id,
 				token

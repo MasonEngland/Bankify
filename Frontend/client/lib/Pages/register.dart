@@ -1,9 +1,10 @@
 // ignore_for_file: file_names
+import 'package:client/Pages/login.dart';
 import 'package:client/fetch_data.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +31,42 @@ class InputFieldsState extends State<InputFields> {
   // private
   bool isRegistered = false;
 
+  // handlers
+  void clickHandler() async {
+    isRegistered = await FetchHandler.sendRegister(
+      {"Username": _username, "Password": _password, "Email": _email},
+    );
+    //print(isRegistered);
+    if (isRegistered != true) {
+      // ignore: use_build_context_synchronously
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            title: Text("Register Failed"),
+          );
+        },
+      );
+      return;
+    }
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const LoginPage(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
         padding: const EdgeInsets.all(15),
         decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(4))),
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
         width: 350,
         height: 500,
         child: Column(
@@ -77,25 +106,7 @@ class InputFieldsState extends State<InputFields> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.blue),
               ),
-              onPressed: () async {
-                isRegistered = await FetchHandler.sendRegister({
-                  "Username": _username,
-                  "Password": _password,
-                  "Email": _email
-                });
-                //print(_isLoggedin);
-                if (isRegistered != true) {
-                  // ignore: use_build_context_synchronously
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        title: Text("Register Failed"),
-                      );
-                    },
-                  );
-                }
-              },
+              onPressed: clickHandler, // onPressed
               child: const Text(
                 "Continue",
                 style: TextStyle(color: Colors.white),
