@@ -79,6 +79,7 @@ class LoginFormState extends State<LoginForm> {
               },
             ),
             TextFormField(
+              obscureText: true,
               decoration: const InputDecoration(
                 hintText: "Password",
               ),

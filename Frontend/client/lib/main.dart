@@ -1,14 +1,21 @@
+import 'package:client/Pages/login.dart';
 import 'package:flutter/material.dart';
-import 'Pages/login.dart';
-//import 'Pages/register.dart';
-//import 'fetch_data.dart';
+//import 'Pages/login.dart';
+import 'widgets/home.dart';
 
 void main() async {
   runApp(const MaterialApp(title: "Welcome to flutter", home: LoginPage()));
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => MyHomePageState();
+}
+
+class MyHomePageState extends State<MyHomePage> {
+  int _currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +31,35 @@ class MyHomePage extends StatelessWidget {
         ],
         backgroundColor: Colors.red,
       ),
-      body: const SomeTextTest(maintext: "Main Test"),
+      body: <Widget>[
+        const HomeBody(),
+        const SomeTextTest(maintext: "Subtext 1"),
+        const SomeTextTest(maintext: "Subtext 2")
+      ][_currentPageIndex],
       bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentPageIndex,
+        indicatorColor: Colors.red,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _currentPageIndex = index;
+          });
+        },
         destinations: const [
-          Text("Cool", textAlign: TextAlign.center),
-          Text("Not Cool", textAlign: TextAlign.center),
-          Text("Kinda Cool", textAlign: TextAlign.center)
+          NavigationDestination(
+            icon: Icon(Icons.house_outlined),
+            selectedIcon: Icon(Icons.house),
+            label: "Home",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.wallet_outlined),
+            selectedIcon: Icon(Icons.wallet),
+            label: "pay",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: "Settings",
+          ),
         ],
       ),
     );

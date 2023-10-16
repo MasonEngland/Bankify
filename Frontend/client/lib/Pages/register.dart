@@ -33,6 +33,17 @@ class InputFieldsState extends State<InputFields> {
 
   // handlers
   void clickHandler() async {
+    if (_username == "" || _password == "" || _email == "") {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            title: Text("Register Failed"),
+          );
+        },
+      );
+      return;
+    }
     isRegistered = await FetchHandler.sendRegister(
       {"Username": _username, "Password": _password, "Email": _email},
     );
@@ -102,15 +113,31 @@ class InputFieldsState extends State<InputFields> {
                 hintText: "Email",
               ),
             ),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.blue),
-              ),
-              onPressed: clickHandler, // onPressed
-              child: const Text(
-                "Continue",
-                style: TextStyle(color: Colors.white),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child: const Text("Login"),
+                ),
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                  ),
+                  onPressed: clickHandler, // onPressed
+                  child: const Text(
+                    "Continue",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             )
           ],
         ),

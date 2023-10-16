@@ -22,9 +22,14 @@ class FetchHandler {
       }
       userData = jsonDecode(response.body);
       print(userData);
+      if (userData == null) {
+        return false;
+      }
+
+      token = userData?["token"];
       return true;
     } catch (err) {
-      print(err.toString());
+      //print(err.toString());
       return false;
     }
   }
@@ -37,8 +42,11 @@ class FetchHandler {
       "content-type": "application/json"
     };
     try {
-      http.Response response =
-          await http.post(url, body: body, headers: headers);
+      http.Response response = await http.post(
+        url,
+        body: body,
+        headers: headers,
+      );
       //print(response.statusCode.toString());
       if (response.statusCode != 200 && response.statusCode != 201) {
         return false;
@@ -48,5 +56,22 @@ class FetchHandler {
       log(err.toString());
       return false;
     }
+  }
+
+  static Future<Map<String, dynamic>> getAccounts() async {
+    print(userData);
+
+    Uri url = Uri.parse("http://localhost:1156/Bank/GetAll");
+
+    var headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "authorization": "bearer $token"
+    };
+
+    http.Response data = await http.get(url, headers: headers);
+    Map<String, dynamic> body = jsonDecode(data.body);
+
+    return body;
   }
 }
