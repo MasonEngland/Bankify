@@ -22,7 +22,7 @@ namespace Bankify.Models
 		{
 			Id = Guid.NewGuid();
 
-			Balance = 0;
+			Balance = 0.0f;
 
 			Date = DateTime.Now;
 		}

@@ -58,8 +58,8 @@ class FetchHandler {
     }
   }
 
-  static Future<Map<String, dynamic>> getAccounts() async {
-    print(userData);
+  static Future<List<dynamic>> getAccounts() async {
+    print(token);
 
     Uri url = Uri.parse("http://localhost:1156/Bank/GetAll");
 
@@ -70,8 +70,17 @@ class FetchHandler {
     };
 
     http.Response data = await http.get(url, headers: headers);
-    Map<String, dynamic> body = jsonDecode(data.body);
+    List<dynamic> body = jsonDecode(data.body);
 
+    print(body);
+    if (data.statusCode != 201 && data.statusCode != 200) {
+      print("failed");
+      print(data.statusCode);
+      return [
+        {"failed": true}
+      ];
+    }
+    print(data.statusCode);
     return body;
   }
 }
