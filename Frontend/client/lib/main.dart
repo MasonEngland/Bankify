@@ -1,5 +1,5 @@
 // ignore_for_file: unused_import
-
+import "Widgets/pay.dart";
 import 'package:client/Pages/login.dart';
 import 'package:client/fetch_data.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class MyHomePageState extends State<MyHomePage> {
       ),
       body: <Widget>[
         const HomeBody(),
-        const SomeTextTest(maintext: "Subtext 1"),
+        const PayPage(),
         const SomeTextTest(maintext: "Subtext 2")
       ][_currentPageIndex],
       bottomNavigationBar: NavigationBar(

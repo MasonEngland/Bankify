@@ -5,7 +5,7 @@ class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
 
   @override
-  createState() => HomeBodyState();
+  State<HomeBody> createState() => HomeBodyState();
 }
 
 class HomeBodyState extends State<HomeBody> {
@@ -111,6 +111,7 @@ class DetailBox extends StatelessWidget {
   }
 }
 
+// ignore this, too small to warrent putting in a differnet place
 String trunkate(String word) {
   return word.substring(0, 5);
 }
