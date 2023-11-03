@@ -68,7 +68,7 @@ public class BankController : Controller
 	}
 
 	[HttpPatch("Balance/{id}")]
-	public object Patch(string id, [FromBody] float balance)
+	public object Patch(string id, [FromBody] float balance, [FromBody] string accountFrom, [FromBody] string description)
 	{
 		try
 		{
@@ -81,10 +81,23 @@ public class BankController : Controller
 				return Unauthorized("token could not be deserialized");
 			}
 
+			BankAccount gotAccount = _db.bankAccounts.Where(item => Convert.ToString(item.Id) == id).ToArray()[0];
+
+			if (gotAccount == null) 
+			{
+				return NotFound("Could not transfer funds");
+			}
+
             //ExecuteUpdate() doesn't require a _db.SaveChanges()
             _db.bankAccounts
 				.Where(item => Convert.ToString(item.Id) == id)
-				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, balance)); 
+				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, gotAccount.Balance + balance));
+
+			Transaction action = new Transaction() { AccountFrom = accountFrom, AccountTo = id, Balance = balance, Description = description };
+
+
+			_db.transactions.Add(action);
+			_db.SaveChanges();
 
             return Ok();
         } catch (Exception err)

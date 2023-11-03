@@ -10,6 +10,8 @@ namespace Bankify.Context
 
 		public DbSet<BankAccount> bankAccounts { get; set; }
 
+		public DbSet<Transaction> transactions { get; set; }
+
 		public DatabaseContext(DbContextOptions options) : base(options) 
 		{
 		}

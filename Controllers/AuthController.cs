@@ -36,7 +36,7 @@ public class AuthController : Controller
 				.ToArray();
 			if (takenemail.Length > 0)
 			{
-				StatusCode(400);
+				HttpContext.Response.StatusCode = 400;
 				return new
 				{
 					success = false,

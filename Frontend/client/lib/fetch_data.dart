@@ -83,4 +83,20 @@ class FetchHandler {
     print(data.statusCode);
     return body;
   }
+
+  /*static void sendMoney(String accountId, double balance, String description) {
+    Map body = {
+      "accountId": accountId,
+      "Balance": balance,
+      "Description": description
+    };
+
+    Map headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "authorization": "bearer $token"
+    };
+
+    Uri url = Uri.parse("http://localhost:1156/Bank/Send");
+  }*/
 }

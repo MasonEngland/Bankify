@@ -1,8 +1,13 @@
 import "package:flutter/material.dart";
 
-class PayPage extends StatelessWidget {
+class PayPage extends StatefulWidget {
   const PayPage({super.key});
 
+  @override
+  State<PayPage> createState() => PayPageState();
+}
+
+class PayPageState extends State<PayPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -27,6 +32,29 @@ class PayPage extends StatelessWidget {
                 ),
               ),
             ),
+            Container(
+              padding: const EdgeInsets.only(bottom: 60),
+              child: TextFormField(
+                decoration: const InputDecoration(hintText: "Amount"),
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4), color: Colors.blue),
+                width: 120,
+                height: 50,
+                child: const Center(
+                  child: Text(
+                    "Submit",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
