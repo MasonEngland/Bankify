@@ -21,7 +21,6 @@ class FetchHandler {
         return false;
       }
       userData = jsonDecode(response.body);
-      print(userData);
       if (userData == null) {
         return false;
       }
@@ -59,8 +58,6 @@ class FetchHandler {
   }
 
   static Future<List<dynamic>> getAccounts() async {
-    print(token);
-
     Uri url = Uri.parse("http://localhost:1156/Bank/GetAll");
 
     var headers = {
@@ -72,31 +69,47 @@ class FetchHandler {
     http.Response data = await http.get(url, headers: headers);
     List<dynamic> body = jsonDecode(data.body);
 
-    print(body);
     if (data.statusCode != 201 && data.statusCode != 200) {
       print("failed");
-      print(data.statusCode);
       return [
         {"failed": true}
       ];
     }
-    print(data.statusCode);
     return body;
   }
 
-  /*static void sendMoney(String accountId, double balance, String description) {
+  static Future<Map?> sendMoney(
+    String accountId,
+    double balance,
+    String description,
+  ) async {
+    if (balance < 0) {
+      return null;
+    }
+
     Map body = {
-      "accountId": accountId,
+      "accountFrom": accountId,
       "Balance": balance,
       "Description": description
     };
 
-    Map headers = {
+    Map<String, String> headers = {
       "Accept": "application/json",
       "content-type": "application/json",
       "authorization": "bearer $token"
     };
 
-    Uri url = Uri.parse("http://localhost:1156/Bank/Send");
-  }*/
+    Uri url = Uri.parse("http://localhost:1156/Bank/Balance/$accountId");
+
+    http.Response response =
+        await http.patch(url, headers: headers, body: body);
+
+    if (response.statusCode != 200 || response.statusCode != 201) {
+      return null;
+    }
+
+    Map<String, dynamic> resBody = jsonDecode(response.body);
+
+    return resBody;
+  }
 }
