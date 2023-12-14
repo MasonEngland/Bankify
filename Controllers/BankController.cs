@@ -48,7 +48,7 @@ public class BankController : Controller
 		try
 		{
             // get the items decoded from the jwt that were passed through the pipeline in the  http context
-            string? data = Convert.ToString(HttpContext.Items["tokenData"]);
+    		string? data = Convert.ToString(HttpContext.Items["tokenData"]);
             UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
 
             if (decoded == null)
@@ -82,11 +82,21 @@ public class BankController : Controller
 			}
 
 			BankAccount gotAccount = _db.bankAccounts.Where(item => Convert.ToString(item.Id) == id).ToArray()[0];
+			BankAccount fromAccount = _db.bankAccounts.Where(item => Convert.ToString(item.Id) == accountFrom).ToArray()[0];
 
-			if (gotAccount == null) 
+			if (gotAccount == null || fromAccount == null) 
 			{
 				return NotFound("Could not transfer funds");
 			}
+
+			if (fromAccount.Balance < balance) 
+			{
+				return Unauthorized("Transaction Failed");
+			}
+
+			_db.bankAccounts
+				.Where(item => Convert.ToString(item.Id) == accountFrom)
+				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, fromAccount.Balance - balance));
 
             //ExecuteUpdate() doesn't require a _db.SaveChanges()
             _db.bankAccounts

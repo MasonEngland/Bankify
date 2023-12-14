@@ -6,6 +6,7 @@ import "package:http/http.dart" as http;
 class FetchHandler {
   static Map<String, dynamic>? userData;
   static String? token;
+  static String? id;
 
   static Future<bool> sendLogin(Map<String, dynamic> data) async {
     Uri url = Uri.parse("http://localhost:1156/Auth/Login");
@@ -24,8 +25,8 @@ class FetchHandler {
       if (userData == null) {
         return false;
       }
-
       token = userData?["token"];
+      id = userData?["id"];
       return true;
     } catch (err) {
       //print(err.toString());
@@ -46,7 +47,6 @@ class FetchHandler {
         body: body,
         headers: headers,
       );
-      //print(response.statusCode.toString());
       if (response.statusCode != 200 && response.statusCode != 201) {
         return false;
       }
@@ -87,8 +87,16 @@ class FetchHandler {
       return null;
     }
 
+    List<dynamic> accounts = await getAccounts();
+    String accountFrom = "";
+    for (var item in accounts) {
+      if (item["name"] == "MyStyle Checking") {
+        accountFrom = item["id"];
+      }
+    }
+
     Map body = {
-      "accountFrom": accountId,
+      "accountFrom": accountFrom,
       "Balance": balance,
       "Description": description
     };
