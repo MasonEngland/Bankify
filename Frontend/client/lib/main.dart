@@ -3,7 +3,7 @@ import "Widgets/pay.dart";
 import 'package:client/Pages/login.dart';
 import 'package:client/fetch_data.dart';
 import 'package:flutter/material.dart';
-//import 'Pages/login.dart';
+import 'package:client/Pages/create_accounts.dart';
 import 'widgets/home.dart';
 
 void main() async {
@@ -30,7 +30,25 @@ class MyHomePageState extends State<MyHomePage> {
           Container(
             margin: const EdgeInsets.only(right: 30),
             child: const Icon(Icons.notifications),
-          )
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              right: 30,
+            ),
+            child: TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        const CreateAccountPage(),
+                  ),
+                );
+              },
+              isSemanticButton: false,
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
+          ),
         ],
         backgroundColor: Colors.red,
       ),
@@ -84,9 +102,9 @@ class SomeTextTest extends StatelessWidget {
       margin: const EdgeInsets.only(left: 20, top: 20),
       height: 50,
       width: 150,
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [Text(maintext), const Text("Test Two")],
+        children: [Text("Under Construction")],
       ),
     );
   }

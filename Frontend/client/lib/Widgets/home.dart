@@ -22,6 +22,7 @@ class HomeBodyState extends State<HomeBody> {
       output.add(DetailBox(
         name: item["name"],
         number: trunkate(item["id"]),
+        fullNumber: item["id"],
         balance: item["balance"].toDouble(),
       ));
     }
@@ -49,12 +50,14 @@ class DetailBox extends StatelessWidget {
     super.key,
     required this.name,
     required this.number,
+    required this.fullNumber,
     required this.balance,
   });
 
   final double balance;
   final String name;
   final String number;
+  final String fullNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -85,11 +88,23 @@ class DetailBox extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              Text(
-                "$number...",
-                style: const TextStyle(
-                  fontSize: 18,
+              TextButton(
+                child: Text(
+                  "$number...",
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(fullNumber),
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),
