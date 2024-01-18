@@ -120,4 +120,18 @@ class FetchHandler {
 
     return resBody;
   }
+
+  static Future<bool> createAccount(Map<String, dynamic> body) async {
+    Map<String, String> headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "authorization": "bearer $token"
+    };
+
+    Uri url = Uri.parse("http://localhost:1156/Bank/Create");
+
+    http.Response response = await http.post(url, body: body, headers: headers);
+
+    return response.statusCode == 200 || response.statusCode == 201;
+  }
 }
