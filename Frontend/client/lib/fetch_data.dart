@@ -130,16 +130,21 @@ class FetchHandler {
       "authorization": "bearer $token"
     };
 
-    Map<String, dynamic> body = {
+    Map<String, dynamic> data = {
       "Name": accountName,
       "AccountID": id,
       "Username": userData?["username"],
       "Email": userData?["email"]
     };
 
+    var body = jsonEncode(data);
+
     Uri url = Uri.parse("http://localhost:1156/Bank/Create");
 
     http.Response response = await http.post(url, body: body, headers: headers);
+
+    print(response.statusCode);
+    print(jsonDecode(response.body));
 
     return response.statusCode == 200 || response.statusCode == 201;
   }
