@@ -4,6 +4,8 @@ import "dart:developer";
 import "package:http/http.dart" as http;
 
 class FetchHandler {
+  // userData will contain Success, Username, Email, Id, and token
+  // all vars below should not be null after login
   static Map<String, dynamic>? userData;
   static String? token;
   static String? id;
@@ -121,11 +123,18 @@ class FetchHandler {
     return resBody;
   }
 
-  static Future<bool> createAccount(Map<String, dynamic> body) async {
+  static Future<bool> createAccount(String accountName, double deposit) async {
     Map<String, String> headers = {
       "Accept": "application/json",
       "content-type": "application/json",
       "authorization": "bearer $token"
+    };
+
+    Map<String, dynamic> body = {
+      "Name": accountName,
+      "AccountID": id,
+      "Username": userData?["username"],
+      "Email": userData?["email"]
     };
 
     Uri url = Uri.parse("http://localhost:1156/Bank/Create");

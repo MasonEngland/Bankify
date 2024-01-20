@@ -100,7 +100,7 @@ public class AuthController : Controller
 			bool isMatch = Verify(account.Password, dbAccount[0].Password);
 
 			// Check Username and Password are Correct
-                if (!isMatch)
+            if (!isMatch)
 			{
 				StatusCode(401);
 				return Unauthorized(new

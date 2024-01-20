@@ -1,5 +1,6 @@
 import "package:client/main.dart";
 import "package:flutter/material.dart";
+import "package:client/fetch_data.dart";
 
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({super.key});
@@ -16,6 +17,9 @@ class CreateAccountPageState extends State<CreateAccountPage> {
           centerTitle: false,
           title: const Text(
             "Create New Bank Account",
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
           actions: [
             TextButton(
@@ -53,7 +57,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
               padding: const EdgeInsets.only(top: 45, right: 20, left: 20),
               child: TextFormField(
                 decoration: const InputDecoration(
-                  hintText: "Bankify Banker ID",
+                  hintText: "Bankify Banker ID (leave blank for default)",
                 ),
               ),
             ),
