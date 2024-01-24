@@ -1,7 +1,6 @@
 ﻿using Bankify.Context;
 using Microsoft.EntityFrameworkCore;
 using Bankify.Middleware;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
 
 namespace Bankify;
