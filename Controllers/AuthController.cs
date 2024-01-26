@@ -17,7 +17,7 @@ public class AuthController : Controller
 {
 
     // pull database using dependancy injection
-  private readonly DatabaseContext _db;
+    private readonly DatabaseContext _db;
 
 	public AuthController(DatabaseContext db)
 	{
@@ -45,22 +45,22 @@ public class AuthController : Controller
 			}
 
 			// db can error at any time
-      _db.userAccounts.Add(new UserAccount()
-      {
-          Username = account.Username,
-          Password = HashPassword(account.Password),
-          Email = account.Email
-      });
-      _db.SaveChanges();
+            _db.userAccounts.Add(new UserAccount()
+            {
+                Username = account.Username,
+                Password = HashPassword(account.Password),
+                Email = account.Email
+            });
+            _db.SaveChanges();
 
-      StatusCode(201);
-      return new 
-      {
-         success = true,
-         msg = "account created"
-      };
-    } catch(Exception err)
-		{
+            StatusCode(201);
+            return new 
+            {
+                success = true,
+                msg = "account created"
+            };
+        } catch(Exception err)
+		    {
 			Debug.WriteLine(err.Message);
 			return StatusCode(500);
 		}
@@ -71,7 +71,7 @@ public class AuthController : Controller
 	public object Login([FromBody] UserAccount account)
 	{
 
-    string? secret = Environment.GetEnvironmentVariable("ACCESS_TOKEN_SECRET");
+        string? secret = Environment.GetEnvironmentVariable("ACCESS_TOKEN_SECRET");
 		// just here for saftey
 		if (secret == null)
 		{
@@ -100,17 +100,17 @@ public class AuthController : Controller
 			bool isMatch = Verify(account.Password, dbAccount[0].Password);
 
 			// Check Username and Password are Correct
-      if (!isMatch)
+            if (!isMatch)
 			{
 				StatusCode(401);
 
 
 				return Unauthorized(new
-			  {
+			{
 				  success = false,
 				  msg = "incorrect username or password"
-        });
-      }
+            });
+        }
 
 			// build a jwt and sign it with a token secret
 			string token = JwtBuilder

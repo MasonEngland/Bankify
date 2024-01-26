@@ -34,7 +34,7 @@ public class BankController : Controller
 
 			return Created(Request.Path, "Account Saved");
 
-		} catch (Exception err) {
+	    } catch (Exception err) {
 			Debug.WriteLine(err.Message);
 			return StatusCode(500);
 		}
@@ -49,12 +49,12 @@ public class BankController : Controller
 		{
             // get the items decoded from the jwt that were passed through the pipeline in the  http context
     	string? data = Convert.ToString(HttpContext.Items["tokenData"]);
-      UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
+        UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
 
-      if (decoded == null)
-			{
-				return Unauthorized("token could not be deserialized");
-			}
+        if (decoded == null)
+		{
+			return Unauthorized("token could not be deserialized");
+		}
 
 			// Check if the ID from the token is matched up with the id attached the requested accounts
 			BankAccount[] bankAccounts = _db.bankAccounts.Where(item => item.AccountID == Convert.ToString(decoded.Id)).ToArray();
@@ -99,7 +99,7 @@ public class BankController : Controller
 				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, fromAccount.Balance - balance));
 
             //ExecuteUpdate() doesn't require a _db.SaveChanges()
-      _db.bankAccounts
+            _db.bankAccounts
 				.Where(item => Convert.ToString(item.Id) == id)
 				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, gotAccount.Balance + balance));
 
@@ -121,13 +121,13 @@ public class BankController : Controller
 	{
 		try
 		{
-      string? data = Convert.ToString(HttpContext.Items["tokenData"]);
-      UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
+            string? data = Convert.ToString(HttpContext.Items["tokenData"]);
+            UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
 
-      if (decoded == null)
-      {
-         return Unauthorized("token could not be deserialized");
-      }
+            if (decoded == null)
+            {
+                return Unauthorized("token could not be deserialized");
+            }
 
 			_db.bankAccounts
 				.Where(item => Convert.ToString(item.Id) == id && item.AccountID == Convert.ToString(decoded.Id))
