@@ -60,7 +60,7 @@ public class AuthController : Controller
                 msg = "account created"
             };
         } catch(Exception err)
-		    {
+		{
 			Debug.WriteLine(err.Message);
 			return StatusCode(500);
 		}
@@ -106,11 +106,11 @@ public class AuthController : Controller
 
 
 				return Unauthorized(new
-			{
+			    {
 				  success = false,
 				  msg = "incorrect username or password"
-            });
-        }
+                });
+            }
 
 			// build a jwt and sign it with a token secret
 			string token = JwtBuilder

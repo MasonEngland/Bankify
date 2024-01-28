@@ -80,19 +80,21 @@ class FetchHandler {
     return body;
   }
 
-  static Future<Map?> sendMoney(
+  static Future<bool> sendMoney(
+    String accountFromName,
     String accountId,
     double balance,
     String description,
   ) async {
     if (balance < 0) {
-      return null;
+      return false;
     }
 
+    // pulls directly from checking account
     List<dynamic> accounts = await getAccounts();
     String accountFrom = "";
     for (var item in accounts) {
-      if (item["name"] == "MyStyle Checking") {
+      if (item["name"] == accountFromName) {
         accountFrom = item["id"];
       }
     }
@@ -112,15 +114,14 @@ class FetchHandler {
     Uri url = Uri.parse("http://localhost:1156/Bank/Balance/$accountId");
 
     http.Response response =
-        await http.patch(url, headers: headers, body: body);
+        await http.patch(url, headers: headers, body: jsonEncode(body));
 
     if (response.statusCode != 200 || response.statusCode != 201) {
-      return null;
+      print(response.statusCode);
+      return false;
     }
 
-    Map<String, dynamic> resBody = jsonDecode(response.body);
-
-    return resBody;
+    return true;
   }
 
   static Future<bool> createAccount(String accountName, double deposit) async {

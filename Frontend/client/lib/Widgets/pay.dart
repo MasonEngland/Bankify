@@ -1,3 +1,4 @@
+import "package:client/fetch_data.dart";
 import "package:flutter/material.dart";
 
 class PayPage extends StatefulWidget {
@@ -8,6 +9,12 @@ class PayPage extends StatefulWidget {
 }
 
 class PayPageState extends State<PayPage> {
+  String fromId = "";
+  String toId = ""; 
+  String description = ""; 
+  double amount = 0; 
+
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -19,14 +26,31 @@ class PayPageState extends State<PayPage> {
             Container(
               padding: const EdgeInsets.only(bottom: 60),
               child: TextFormField(
+                onChanged: (String val) {
+                  fromId = val;
+                },
                 decoration: const InputDecoration(
-                  hintText: "Account id",
+                  hintText: "Account from (name)",
+                )
+              )
+            ),
+            Container(
+              padding: const EdgeInsets.only(bottom: 60),
+              child: TextFormField(
+                onChanged: (String val) {
+                  toId = val;
+                },
+                decoration: const InputDecoration(
+                  hintText: "Account to (id)",
                 ),
               ),
             ),
             Container(
               padding: const EdgeInsets.only(bottom: 60),
               child: TextFormField(
+                onChanged: (String val) {
+                  description = val;
+                },
                 decoration: const InputDecoration(
                   hintText: "Description",
                 ),
@@ -35,14 +59,36 @@ class PayPageState extends State<PayPage> {
             Container(
               padding: const EdgeInsets.only(bottom: 60),
               child: TextFormField(
+                onChanged: (String val) {
+                  try {
+                    amount = double.parse(val);
+                  } on TypeError {
+                    return;
+                  }
+                },
                 decoration: const InputDecoration(hintText: "Amount"),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true,),
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                bool success = await FetchHandler.sendMoney(fromId, toId, amount, description);
+                if (!success) {
+                  // ignore: use_build_context_synchronously
+                  await showDialog(  
+                  context: context, 
+                  builder: (BuildContext context) {
+                    return const AlertDialog(
+                      title: Text("Transaction Failed :("),
+                    );
+                  });
+                }
+              },
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4), color: Colors.blue),
+                  borderRadius: BorderRadius.circular(4), 
+                  color: Colors.blue,
+                ),
                 width: 120,
                 height: 50,
                 child: const Center(
