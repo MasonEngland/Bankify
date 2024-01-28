@@ -83,6 +83,23 @@ class PayPageState extends State<PayPage> {
                     );
                   });
                 }
+                else {
+                  // ignore: use_build_context_synchronously
+                  await showDialog(
+                    context: context, 
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text("Success!"),
+                      );
+                    }
+                  );
+                  setState(() {
+                    fromId = "";
+                    toId = "";
+                    description = "";
+                    amount = 0;
+                  });
+                }
               },
               child: Container(
                 decoration: BoxDecoration(

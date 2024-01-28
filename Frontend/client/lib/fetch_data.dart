@@ -100,7 +100,8 @@ class FetchHandler {
     }
 
     Map body = {
-      "accountFrom": accountFrom,
+      "AccountTo": accountId,
+      "AccountFrom": accountFrom,
       "Balance": balance,
       "Description": description
     };
@@ -111,12 +112,11 @@ class FetchHandler {
       "authorization": "bearer $token"
     };
 
-    Uri url = Uri.parse("http://localhost:1156/Bank/Balance/$accountId");
+    Uri url = Uri.parse("http://localhost:1156/Bank/Balance");
 
-    http.Response response =
-        await http.patch(url, headers: headers, body: jsonEncode(body));
+    http.Response response = await http.patch(url, headers: headers, body: jsonEncode(body));
 
-    if (response.statusCode != 200 || response.statusCode != 201) {
+    if (response.statusCode != 200 && response.statusCode != 201) {
       print(response.statusCode);
       return false;
     }

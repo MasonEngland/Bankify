@@ -67,8 +67,8 @@ public class BankController : Controller
 		}
 	}
 
-	[HttpPatch("Balance/{id}")]
-	public object Patch(string id, [FromBody] float balance, [FromBody] string accountFrom, [FromBody] string description)
+	[HttpPatch("Balance")]
+	public object Patch([FromBody] Transaction body)
 	{
 		try
 		{
@@ -81,39 +81,38 @@ public class BankController : Controller
 				return Unauthorized("token could not be deserialized");
 			}
 
-			BankAccount gotAccount = _db.bankAccounts.Where(item => Convert.ToString(item.Id) == id).ToArray()[0];
-			BankAccount fromAccount = _db.bankAccounts.Where(item => Convert.ToString(item.Id) == accountFrom).ToArray()[0];
+			BankAccount[] gotAccount = _db.bankAccounts.Where(item => Convert.ToString(item.Id) == body.AccountTo).ToArray();
+			BankAccount[] fromAccount = _db.bankAccounts.Where(item => Convert.ToString(item.Id) == body.AccountFrom).ToArray();
 
-			if (gotAccount == null || fromAccount == null) 
+			if (gotAccount.Length < 1 || fromAccount.Length < 1) 
 			{
-				return NotFound("Could not transfer funds");
+				return NotFound(new {body.AccountTo, body.Description});
 			}
 
-			if (fromAccount.Balance < balance) 
+			if (fromAccount[0].Balance < body.Balance) 
 			{
 				return Unauthorized("Transaction Failed");
 			}
 
 			_db.bankAccounts
-				.Where(item => Convert.ToString(item.Id) == accountFrom)
-				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, fromAccount.Balance - balance));
+				.Where(item => Convert.ToString(item.Id) == body.AccountFrom)
+				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, fromAccount[0].Balance - body.Balance));
 
             //ExecuteUpdate() doesn't require a _db.SaveChanges()
             _db.bankAccounts
-				.Where(item => Convert.ToString(item.Id) == id)
-				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, gotAccount.Balance + balance));
-
-			Transaction action = new Transaction() { AccountFrom = accountFrom, AccountTo = id, Balance = balance, Description = description };
+				.Where(item => Convert.ToString(item.Id) == body.AccountTo)
+				.ExecuteUpdate(u => u.SetProperty(p => p.Balance, gotAccount[0].Balance + body.Balance));
 
 
-			_db.transactions.Add(action);
+			_db.transactions.Add(body);
 			_db.SaveChanges();
 
             return Ok();
         } catch (Exception err)
 		{
 			Debug.WriteLine(err.Message);
-			return StatusCode(500);
+			HttpContext.Response.StatusCode = 500;
+            return err.Message;
 		}		
 	}
 	[HttpDelete("Remove/{id}")]
