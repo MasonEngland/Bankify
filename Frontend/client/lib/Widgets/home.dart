@@ -36,10 +36,12 @@ class HomeBodyState extends State<HomeBody> {
     if (_detailBoxes.isEmpty) {
       handle();
     }
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: _detailBoxes,
+    return SingleChildScrollView(
+      child: Center (
+        child : Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: _detailBoxes,
+        ),
       ),
     );
   }
