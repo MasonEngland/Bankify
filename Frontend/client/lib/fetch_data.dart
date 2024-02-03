@@ -2,6 +2,7 @@
 import "dart:convert";
 import "dart:developer";
 import "package:http/http.dart" as http;
+import "package:shared_preferences/shared_preferences.dart";
 
 class FetchHandler {
   // userData will contain Success, Username, Email, Id, and token
@@ -10,7 +11,42 @@ class FetchHandler {
   static String? token;
   static String? id;
 
+  static Future<bool> quickLogin() async {
+    final SharedPreferences localStorage = await SharedPreferences.getInstance();
+
+    try {
+      token = localStorage.getString("LoginToken");
+
+      if (token == null) {
+        return false;
+      }
+
+      Uri url = Uri.parse("http://localhost:1156/Auth/Quickauth");
+
+      var headers = {
+        "Accept": "application/json",
+        "content-type": "application/json",
+        "Authorization": "bearer $token"
+      };
+      http.Response response = await http.get(url, headers: headers);
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        print(jsonDecode(response.body));
+        return false;
+      }
+      return true;
+      
+    } catch (err) {
+      log(err.toString());
+      return false;
+    }
+    
+  }
+
   static Future<bool> sendLogin(Map<String, dynamic> data) async {
+
+    final SharedPreferences localStorage = await SharedPreferences.getInstance();
+
     Uri url = Uri.parse("http://localhost:1156/Auth/Login");
     const headers = {
       "Accept": "application/json",
@@ -29,6 +65,9 @@ class FetchHandler {
       }
       token = userData?["token"];
       id = userData?["id"];
+
+      localStorage.setString("LoginToken", token!);
+
       return true;
     } catch (err) {
       //print(err.toString());

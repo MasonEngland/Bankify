@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Bankify.Models;
@@ -156,5 +157,49 @@ public class AuthController : Controller
 		}
 		return Ok();
 	}
-}
 
+    [HttpGet("Quickauth")]
+    public object QuickAuth() 
+    {
+        string? data = Convert.ToString(HttpContext.Items["tokenData"]);
+
+        if (data == null) 
+        {
+            return Unauthorized("token invalid");
+        }
+
+        UserAccount decoded = JsonSerializer.Deserialize<UserAccount>(data);
+
+        if (decoded == null) 
+        {
+            return Unauthorized("token could not be deserialized");    
+        }
+        
+        try 
+        {
+            UserAccount[] account = _db.userAccounts.Where(item => item.Email == decoded.Email).ToArray();
+
+            if (account.Length < 1) 
+            {
+                return NotFound(decoded.Email);
+            }
+            if (decoded.Password == account[0].Password)
+            {
+                return new
+                {
+                    Success = true,
+                    Username = account[0].Username,
+                    Email = account[0].Email,
+                    Id = account[0].Id
+                };
+            }
+
+            return Unauthorized("username or password invalid ");
+        }  catch (Exception err)
+        {
+            Debug.WriteLine(err.Message);
+            return StatusCode(500);
+        }
+    }
+}
+ 

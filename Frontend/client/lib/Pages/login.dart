@@ -53,8 +53,17 @@ class LoginFormState extends State<LoginForm> {
     );
   }
 
+  void tryLogin(BuildContext context) async {
+    if (await FetchHandler.quickLogin()) {
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (BuildContext context) => const MyHomePage())
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    tryLogin(context);
     return Center(
       child: Container(
         padding: const EdgeInsets.all(15),

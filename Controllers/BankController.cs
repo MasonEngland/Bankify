@@ -48,13 +48,13 @@ public class BankController : Controller
 		try
 		{
             // get the items decoded from the jwt that were passed through the pipeline in the  http context
-    	string? data = Convert.ToString(HttpContext.Items["tokenData"]);
-        UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
+    	    string? data = Convert.ToString(HttpContext.Items["tokenData"]);
+            UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
 
-        if (decoded == null)
-		{
-			return Unauthorized("token could not be deserialized");
-		}
+            if (decoded == null)
+		    {
+			    return Unauthorized("token could not be deserialized");
+		    }
 
 			// Check if the ID from the token is matched up with the id attached the requested accounts
 			BankAccount[] bankAccounts = _db.bankAccounts.Where(item => item.AccountID == Convert.ToString(decoded.Id)).ToArray();
@@ -113,7 +113,7 @@ public class BankController : Controller
 			Debug.WriteLine(err.Message);
 			HttpContext.Response.StatusCode = 500;
             return err.Message;
-		}		
+		}
 	}
 	[HttpDelete("Remove/{id}")]
 	public object Delete(string id)
