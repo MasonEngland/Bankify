@@ -49,7 +49,7 @@ public class BankController : Controller
 		{
             // get the items decoded from the jwt that were passed through the pipeline in the  http context
     	    string? data = Convert.ToString(HttpContext.Items["tokenData"]);
-            UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
+            UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data!);
 
             if (decoded == null)
 		    {
@@ -74,7 +74,7 @@ public class BankController : Controller
 		{
 			//TODO possibly refactor into seperate method
 			string? data = Convert.ToString(HttpContext.Items["tokenData"]);
-			UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data);
+			UserAccount? decoded = JsonSerializer.Deserialize<UserAccount>(data!);
 
 			if (decoded == null)
 			{

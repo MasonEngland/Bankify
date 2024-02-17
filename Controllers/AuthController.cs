@@ -54,7 +54,7 @@ public class AuthController : Controller
             });
             _db.SaveChanges();
 
-            StatusCode(201);
+            HttpContext.Response.StatusCode = 201;
             return new 
             {
                 success = true,
@@ -168,7 +168,7 @@ public class AuthController : Controller
             return Unauthorized("token invalid");
         }
 
-        UserAccount decoded = JsonSerializer.Deserialize<UserAccount>(data);
+        UserAccount decoded = JsonSerializer.Deserialize<UserAccount>(data)!;
 
         if (decoded == null) 
         {
@@ -183,18 +183,21 @@ public class AuthController : Controller
             {
                 return NotFound(decoded.Email);
             }
-            if (decoded.Password == account[0].Password)
+
+            if (decoded.Password != account[0].Password)
             {
-                return new
-                {
-                    Success = true,
-                    Username = account[0].Username,
-                    Email = account[0].Email,
-                    Id = account[0].Id
-                };
+                return Unauthorized("username or password invalid ");
+                
             }
 
-            return Unauthorized("username or password invalid ");
+            return new
+            {
+                Success = true,
+                Username = account[0].Username,
+                Email = account[0].Email,
+                Id = account[0].Id
+            };
+            
         }  catch (Exception err)
         {
             Debug.WriteLine(err.Message);
